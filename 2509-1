@@ -1,0 +1,136 @@
+# 프로젝트 기술별 구조 정리
+
+## 1. Vue.js (프론트엔드 프레임워크)
+
+### Vue 프로젝트 생성 기본 방법
+1. Node.js 설치
+2. 프로젝트 생성
+```bash
+npm create vite@latest my-vue-app
+cd my-vue-app
+npm install
+npm run dev
+```
+3. Vite 개발 서버 실행 후 브라우저에서 확인
+
+### 기본 구조
+```
+my-vue-app/
+├─ node_modules/        # npm/yarn으로 설치한 라이브러리 저장소
+├─ public/              # 정적 자원 (favicon, 이미지 등) → 빌드시 그대로 복사
+│   └─ index.html       # 앱의 진입점 HTML (Vue 앱이 mount 되는 곳)
+├─ src/                 # 실제 소스코드
+│   ├─ assets/          # 정적 파일 (CSS, 이미지 등)
+│   ├─ components/      # Vue 컴포넌트들
+│   ├─ App.vue          # 최상위 Vue 컴포넌트
+│   └─ main.ts          # 앱 진입 스크립트 (Vue 인스턴스 생성)
+├─ package.json         # 의존성, 스크립트, 메타 정보
+├─ tsconfig.json        # TypeScript 설정
+└─ vite.config.ts       # Vite 빌드/개발 서버 설정
+```
+
+- **index.html**: Vue 앱이 mount 되는 HTML (root div 있음)
+- **package.json**: 라이브러리 버전, 실행 스크립트 정의 (npm run dev 등)
+- **vite.config.ts**: 빌드 도구 설정 (포트, 플러그인, alias 등)
+
+## 2. Django (백엔드 프레임워크)
+
+### Django 프로젝트 생성 기본 방법
+1. 가상환경 생성 및 활성화
+```bash
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
+```
+2. Django 설치
+```bash
+pip install django
+```
+3. 프로젝트 생성
+```bash
+django-admin startproject mysite
+cd mysite
+python manage.py runserver
+```
+4. 앱 생성
+```bash
+python manage.py startapp app1
+```
+
+### 기본 구조 (예: `django-admin startproject mysite`)
+```
+mysite/
+├─ manage.py            # Django 관리 명령어 실행 (서버 실행, 마이그레이션 등)
+├─ mysite/              # 프로젝트 설정 디렉토리
+│   ├─ __init__.py
+│   ├─ settings.py      # 프로젝트 설정 (DB, 앱, 미들웨어 등)
+│   ├─ urls.py          # URL 라우팅
+│   ├─ wsgi.py          # WSGI 서버용 진입점
+│   └─ asgi.py          # ASGI 서버용 진입점
+├─ app1/                # 하나의 앱 (startapp으로 생성)
+│   ├─ models.py        # DB 모델 정의
+│   ├─ views.py         # 요청 처리 로직
+│   ├─ urls.py          # 앱 전용 라우팅
+│   ├─ templates/       # HTML 템플릿
+│   └─ static/          # 정적 파일 (CSS, JS, 이미지 등)
+```
+
+## 3. Docker
+
+도커는 특정 앱/서비스 실행 환경을 "컨테이너"로 만드는 기술입니다.
+
+```
+project/
+├─ Dockerfile           # 컨테이너 빌드 규칙 정의 (OS, 패키지, 실행명령 등)
+├─ docker-compose.yml   # 여러 컨테이너 묶어서 실행 (웹, DB, 캐시 등)
+├─ requirements.txt     # (Python 프로젝트라면) pip 패키지 목록
+└─ src/                 # 앱 소스코드
+```
+
+- **Dockerfile**: 이미지 빌드 지침서 (FROM, RUN, COPY, CMD 등)
+- **docker-compose.yml**: 여러 컨테이너 (웹+DB+캐시 등) 네트워크로 연결
+
+## 4. Kubernetes (K8s)
+
+쿠버네티스는 컨테이너 오케스트레이션 툴로, YAML 매니페스트 중심입니다:
+
+```
+k8s/
+├─ deployment.yaml      # 앱 컨테이너 배포 정의 (레플리카 수, 이미지, 포트 등)
+├─ service.yaml         # 외부/내부 통신 서비스 정의 (ClusterIP, LoadBalancer 등)
+├─ ingress.yaml         # 도메인 기반 라우팅 정의
+├─ configmap.yaml       # 환경설정 (환경변수, 설정파일)
+└─ secret.yaml          # 비밀정보 (DB 비밀번호 등)
+```
+
+- **Deployment**: 앱 컨테이너 몇 개 띄울지, 어떤 이미지 쓸지 정의
+- **Service**: 컨테이너 접근을 위한 가상 IP 제공
+- **Ingress**: 도메인 → 서비스 라우팅
+- **ConfigMap / Secret**: 설정값 관리
+
+## 5. MySQL
+
+MySQL은 DBMS로 디렉토리 구조보다는 DB 내부 구조 + 설정 파일 중심입니다.
+
+- 설정 파일: `my.cnf` 또는 `mysqld.cnf` (포트, 문자셋, 버퍼 크기 등)
+- DB 내부 구조:
+
+```
+Database
+ ├─ Table
+ │   ├─ Column (필드)
+ │   └─ Row (데이터)
+```
+
+- 서버 내부 파일 위치 (리눅스 기준): `/var/lib/mysql/`
+- DB 디렉토리: db_name/ → 각 데이터베이스
+- 테이블 파일: table_name.frm, .ibd 등 → 테이블 구조 & 데이터 저장
+
+---
+
+**정리**
+- Vue: 프론트엔드 앱 생성 및 구조 (vite 사용, src, public, index.html, vite.config.ts)
+- Django: 백엔드 프로젝트 생성 및 구조 (settings.py, urls.py, views.py, templates/)
+- Docker: 컨테이너 정의 (Dockerfile, docker-compose.yml)
+- K8s: 컨테이너 오케스트레이션 (YAML 매니페스트: deployment, service, ingress)
+- MySQL: DBMS (설정 my.cnf, 내부 DB/Table 구조)
